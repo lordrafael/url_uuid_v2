@@ -1,0 +1,42 @@
+version: '3.10'
+
+services:
+  fastapi:
+    build: .
+    container_name: fastapi_container
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: url_service
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+
+  mysql:
+    image: mysql:8.4
+    container_name: test-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: url_service
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+
+volumes:
+  mysql_data:
+    driver: local

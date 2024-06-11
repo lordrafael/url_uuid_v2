@@ -1,0 +1,18 @@
+Upload content
+curl -X POST "http://127.0.0.1:8000/process_csv/" -F "file=@/home/rafael/Desktop/url_uuid_v2/urls.csv
+
+Upload single url
+curl -X POST "http://127.0.0.1:8000/process_url"  "www.facebook.com"
+
+GET from mysql
+curl -X GET "http://127.0.0.1:8000/url/mysql/{87a27448-432a-4223-85c4-a07d0474d406}"
+
+GET from redis
+curl -X GET "http://127.0.0.1:8000/url/redis/{3781b59e-0739-4813-960d-2147de2eebce}"
+
+GET from cache
+curl -X GET "http://127.0.0.1:8000/url/cache/{a057a3d3-80e1-4e64-82a2-3cbc9f22eea8}"
+
+Post multiple urls sequentially
+python3 post_urls.py   	***update file path***
+
