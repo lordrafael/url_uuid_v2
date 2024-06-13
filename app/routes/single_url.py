@@ -1,8 +1,8 @@
 import uuid
 from fastapi import APIRouter, Form,  HTTPException
-from ..mysql_conn import create_mysql_connection, execute_query
-from ..redis_conn import create_redis_connection
-from ..cache_conn import cache
+from ..db.mysql_conn import create_mysql_connection, execute_query
+from ..db.redis_conn import create_redis_connection
+from ..db.cache_conn import cache
 import time
 
 url_router = APIRouter()

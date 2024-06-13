@@ -1,5 +1,5 @@
 import redis
-from .config import REDIS_HOST, REDIS_PORT, REDIS_DB
+from ..config import REDIS_HOST, REDIS_PORT, REDIS_DB
 
 def create_redis_connection():
     try:
