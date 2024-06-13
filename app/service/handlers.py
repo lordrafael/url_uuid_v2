@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 import time
 import uuid
@@ -43,6 +44,57 @@ def get_redis_connection():
     finally:
         conn.close()
         
+
+def insert_into_mysql(data_to_insert):
+    insert_url_query = """
+    INSERT INTO urls (uuid, url) VALUES (%s, %s)
+    """
+    with get_mysql_connection() as mysql_connection:
+        try:
+            start_mysql_time = time.time()
+            cursor = mysql_connection.cursor()
+            cursor.executemany(insert_url_query, data_to_insert)
+            mysql_connection.commit()
+            cursor.close()
+            total_mysql_time = time.time() - start_mysql_time
+
+            return total_mysql_time
+        
+        except Exception as e:
+            mysql_connection.rollback()
+            print(f"Error during batch insert: {e}")
+            return None
+
+def insert_into_redis(data_to_insert):
+    with get_redis_connection() as redis_connection:
+        
+        total_redis_time = 0
+        
+        start_redis_time = time.time()
+        for url_uuid, url in data_to_insert:
+            try:
+                redis_connection.set(url_uuid, url)
+            except Exception as e:
+                print(f"Error inserting into Redis: {e}")
+        total_redis_time += time.time() - start_redis_time
+
+        return total_redis_time
+
+def insert_into_cache(data_to_insert):
+    
+    total_cache_time = 0
+
+    start_cache_time = time.time()
+    for url_uuid, url in data_to_insert:
+        try:
+            cache[url_uuid] = url
+        except Exception as e:
+            print(f"Error inserting into cache: {e}")
+            
+    total_cache_time += time.time() - start_cache_time
+
+    return total_cache_time
+
 def process_csv(file):
     try:
         df = pd.read_csv(file)
@@ -50,47 +102,16 @@ def process_csv(file):
         print(f"Error reading CSV file: {e}")
         return
 
-    insert_url_query = """
-    INSERT INTO urls (uuid, url) VALUES (%s, %s)
-    """
-
-    # Collect all data to be inserted in a list of tuples
-    data_to_insert = []
-
-    with get_mysql_connection() as mysql_connection, get_redis_connection() as redis_connection:
-        for _, row in df.iterrows():
-            try:
-                url = row['url']
-                url_uuid = str(uuid.uuid4())
-                
-                data_to_insert.append((url_uuid, url))
-                
-                # Cache in Redis and local cache
-                start_redis_time = time.time()     
-                redis_connection.set(url_uuid, url)
-                end_redis_time = time.time()
-                elapsed_redis_time = end_redis_time - start_redis_time
-                start_cache_time = time.time() 
-                cache[url_uuid] = url
-                end_cache_time = time.time()
-                elapsed_cache_time = end_cache_time - start_cache_time
-            except Exception as e:
-                print(f"Error processing row {row}: {e}")
-
-        # Execute batch insert
-        if data_to_insert:
-            try:
-                start_mysql_time = time.time() 
-                cursor = mysql_connection.cursor()
-                cursor.executemany(insert_url_query, data_to_insert)
-                mysql_connection.commit()
-                cursor.close()
-                end_mysql_time = time.time()
-                elapsed_mysql_time = end_mysql_time - start_mysql_time
-            except Exception as e:
-                mysql_connection.rollback()
-                print(f"Error during batch insert: {e}")
+    data_to_insert = [(str(uuid.uuid4()), row['url']) for _, row in df.iterrows()]
     
+    
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        mysql_future = executor.submit(insert_into_mysql, data_to_insert)
+        redis_future = executor.submit(insert_into_redis, data_to_insert)
+        cache_future = executor.submit(insert_into_cache, data_to_insert)
+        
+        elapsed_mysql_time = mysql_future.result()
+        elapsed_redis_time = redis_future.result()
+        elapsed_cache_time = cache_future.result()
+
     return elapsed_mysql_time, elapsed_redis_time, elapsed_cache_time
-
-

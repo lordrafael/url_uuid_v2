@@ -16,11 +16,16 @@ curl -X GET "http://127.0.0.1:8000/url/cache/{a057a3d3-80e1-4e64-82a2-3cbc9f22ee
 Post multiple urls sequentially
 python3 post_urls.py   	***update file path***
 
+***************************************************************************************************************
+
 
 url_uuid_v2
 
 Upload content
-curl -X POST "http://127.0.0.1:8000/csv/" -F "file=@/home/rafael/Downloads/urls.csv"
+curl -X POST "http://127.0.0.1:8000/csv/" -F "file=@/home/rafael/Desktop/url_uuid_v2/urls_1000.csv"  
 
 GET (?db=mysql/redis/cache) 
-curl -X GET "http://127.0.0.1:8000/url/{bf825cab-ae8a-462e-9214-da4fc2b0f9be}?db=mysql"
+curl -X GET "http://127.0.0.1:8000/url/{01f7f7b4-de0a-4779-b815-3eb9f3bfb44f}?db=mysql"
+
+Batch GET
+python3 get_urls.py /home/rafael/Downloads/get_uuid_100.csv http://127.0.0.1:8000/url mysql

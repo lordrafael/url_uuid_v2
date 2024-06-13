@@ -10,12 +10,12 @@ async def upload_csv(file: UploadFile = File(...)):
         print("hit paiseeeeeeeeee")
         content = await file.read()
         file_like_object = io.StringIO(content.decode('utf-8'))
-        elapsed_mysql_time, elapsed_redis_time, elapsed_cache_time = process_csv(file_like_object)
+        total_mysql_time, total_redis_time, total_cache_time = process_csv(file_like_object)
         return {
                 "message": "CSV processed successfully",
-                "elapsed_mysql_time": elapsed_mysql_time,
-                "elapsed_redis_time": elapsed_redis_time,
-                "elapsed_cache_time": elapsed_cache_time
+                "elapsed_mysql_time": total_mysql_time,
+                "elapsed_redis_time": total_redis_time, 
+                "elapsed_cache_time": total_cache_time
                 }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
