@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+import logging
 import time
 import uuid
 import pandas as pd
@@ -6,6 +7,9 @@ from app.db.redis_conn import create_redis_connection
 from app.db.mysql_conn import create_mysql_connection
 from app.db.cache_conn import cache
 from app.repository.store_data import insert_into_mysql,insert_into_redis,insert_into_cache
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 def get_url_by_uuid_mysql(url_uuid):
@@ -18,22 +22,28 @@ def get_url_by_uuid_mysql(url_uuid):
     end_time = time.time()
     total_elapsed_time = end_time - start_time
     print(f"Time taken to retrieve URL from MySQL: {total_elapsed_time} seconds")
+    logger.info("Successfully fetchd URL from MySQL")
+
     return result[0] if result else None
 
 def get_url_by_uuid_redis(url_uuid):
     redis_connection = create_redis_connection()
     url = redis_connection.get(url_uuid)
+    logger.info("Successfully fetchd URL from Redis")
     return url.decode('utf-8') if url else None
 
 def get_url_by_uuid_cache(url_uuid):
     url = cache.get(url_uuid)
+    logger.info("Successfully fetchd URL from Cache")
     return url if url else None
 
 def process_csv(file):
     try:
         df = pd.read_csv(file)
+        logger.info("Successfully read csv")
     except Exception as e:
         print(f"Error reading CSV file: {e}")
+        logger.error("Failed to read csv")
         return
 
     data_to_insert = [(str(uuid.uuid4()), row['url']) for _, row in df.iterrows()]
@@ -46,5 +56,8 @@ def process_csv(file):
         elapsed_mysql_time = mysql_future.result()
         elapsed_redis_time = redis_future.result()
         elapsed_cache_time = cache_future.result()
+        
+        logger.info("Successfully stored in MySQL,Redis and Cache")
+
 
     return elapsed_mysql_time, elapsed_redis_time, elapsed_cache_time
