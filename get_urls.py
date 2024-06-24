@@ -44,7 +44,7 @@ def fetch_urls(base_url, uuids, db):
     return results
 
 
-def main(file_path, base_url, db, output_file):
+def main(file_path, base_url, db):
     uuids = read_uuids_from_csv(file_path)
     if not uuids:
         print("No UUIDs to process.")
@@ -52,20 +52,16 @@ def main(file_path, base_url, db, output_file):
 
     results = fetch_urls(base_url, uuids, db)
     
-    df_results = pd.DataFrame(results)
-    df_results.to_csv(output_file, index=False)
-    print(f"Results saved to {output_file}")
-    
-    #for result in results:
-    #    print(result)
+    #df_results = pd.DataFrame(results)
+    for result in results:
+        print(result)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Read UUIDs from a CSV file and fetch URLs from a FastAPI endpoint.")
     parser.add_argument("file_path", help="Path to the CSV file containing UUIDs")
     parser.add_argument("base_url", help="Base URL of the FastAPI endpoint")
     parser.add_argument("db", help="Database to use ('mysql', 'redis', or 'cache')")
-    parser.add_argument("output_file", help="Path to the output CSV file")
     
     
     args = parser.parse_args()
-    main(args.file_path, args.base_url, args.db, args.output_file)
+    main(args.file_path, args.base_url, args.db)

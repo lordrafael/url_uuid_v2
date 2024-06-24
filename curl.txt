@@ -28,4 +28,4 @@ GET (?db=mysql/redis/cache)
 curl -X GET "http://127.0.0.1:8000/url/{01f7f7b4-de0a-4779-b815-3eb9f3bfb44f}?db=mysql"
 
 Batch GET
-python3 get_urls.py /home/rafael/Downloads/get_uuid_100.csv http://127.0.0.1:8000/url mysql
+python3 get_urls.py /home/rafael/Downloads/uuid_1000.csv http://127.0.0.1:8000/url mysql result_mysql_1000.csv

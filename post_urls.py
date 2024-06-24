@@ -15,11 +15,23 @@ def post_url(url):
 
 
 def read_urls_from_csv(file_path):
-    df = pd.read_csv(file_path)
+    try:
+        df = pd.read_csv(file_path)
+    except Exception as e:
+        raise ValueError("Can't read file : {e}")
+    
     if 'url' not in df.columns:
         raise ValueError("CSV file must contain a 'url' column")
+    
     return df['url'].tolist()
 
+def read_url_from_txt(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            urls = [line.strip() for line in file.readline() if line.strip()]
+        return urls
+    except Exception as e;
+    raise ValueError (f"Error reading the text file")
 
 def post_urls_sequentially(urls):
     
