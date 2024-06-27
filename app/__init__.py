@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .routes.get import get_router
-from .routes.post import post_router
+from .routes.fetchUrl import get_router
+from .routes.uploadUrl import post_router
 
 app = FastAPI()
 

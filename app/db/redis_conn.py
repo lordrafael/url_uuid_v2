@@ -2,8 +2,8 @@ import logging
 import redis
 from app.config import REDIS_HOST, REDIS_PORT, REDIS_DB
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+logging.basicConfig(filename='/home/rafael/Desktop/urlurlUuid.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
 
 def create_redis_connection():
     try:
@@ -17,3 +17,6 @@ def create_redis_connection():
         logger.error(f"Error during Redis connection: {e}")
 
         return None
+
+
+

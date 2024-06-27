@@ -23,7 +23,7 @@ def fetch_urls(base_url, uuids, db):
             
             if response.status_code == 200:
                 result = response.json()
-                result[elapsed_time] = elapsed_time
+                result['time'] = elapsed_time
                 results.append(result)
             else:
                 print(f"Failed to fetch URL for UUID {uuid}: {response.status_code} {response.text}")
@@ -52,9 +52,11 @@ def main(file_path, base_url, db):
 
     results = fetch_urls(base_url, uuids, db)
     
-    #df_results = pd.DataFrame(results)
-    for result in results:
-        print(result)
+    #print(results)
+    df_results = pd.DataFrame(results)
+    resultPath = 'get_result_cache.csv'
+    df_results.to_csv(resultPath, index=False)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Read UUIDs from a CSV file and fetch URLs from a FastAPI endpoint.")

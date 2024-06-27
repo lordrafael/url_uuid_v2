@@ -8,8 +8,8 @@ from app.db.mysql_conn import create_mysql_connection
 from app.db.cache_conn import cache
 from app.repository.store_data import insert_into_mysql,insert_into_redis,insert_into_cache
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+logging.basicConfig(filename='urlUuid.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
 
 
 def get_url_by_uuid_mysql(url_uuid):
@@ -58,6 +58,5 @@ def process_csv(file):
         elapsed_cache_time = cache_future.result()
         
         logger.info("Successfully stored in MySQL,Redis and Cache")
-
 
     return elapsed_mysql_time, elapsed_redis_time, elapsed_cache_time

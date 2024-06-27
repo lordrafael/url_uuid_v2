@@ -1,0 +1,58 @@
+import time
+import requests
+import pandas as pd
+
+def readUuidFromCsv(filePath):
+    try:
+        df = pd.read_csv(filePath)
+        if 'uuid' not in df.columns:
+            raise ValueError("Value thik naiiiiiiiii")
+        #print(df)
+        return df['uuid'].tolist()
+    except Exception as e:
+        print(f"Error hoiseeeeee: {e}")
+        return []
+    
+def fetchUrls(baseUrl, uuids, db):
+    results = []
+    for uuid in uuids:
+        try:
+            start_time = time.time()
+            response = requests.get(f"{baseUrl}/{uuid}", params={"db": db})
+            elapsed_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                result = response.json()
+                result['time'] = elapsed_time
+                results.append(result)
+            else:
+                print(f"Failed to fetch URL for UUID {uuid}: {response.status_code} {response.text}")
+                results.append({
+                    "uuid": uuid,
+                    "url": None,
+                    "elapsed_time": elapsed_time,
+                    "error": response.text
+                })
+        except Exception as e:
+            print(f"Error fetching URL for UUID {uuid}: {e}")
+            results.append({
+                "uuid": uuid,
+                "url": None,
+                "elapsed_time": None,
+                "error": str(e)
+            })
+    #print(results)
+    return results
+
+filePath = '/home/rafael/Desktop/url_uuid_v2/uuid_list_100.csv'
+uuids = readUuidFromCsv(filePath)
+db = 'mysql'
+baseUrl = 'http://127.0.0.1:8000/url'
+results = fetchUrls(baseUrl, uuids, db)
+#print(results)
+#results = []
+for result in results:
+    print(result)
+df = pd.DataFrame(results)
+resultPath = 'result_temp_100.csv'
+df.to_csv(resultPath, index=False)

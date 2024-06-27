@@ -27,5 +27,8 @@ curl -X POST "http://127.0.0.1:8000/csv/" -F "file=@/home/rafael/Desktop/url_uui
 GET (?db=mysql/redis/cache) 
 curl -X GET "http://127.0.0.1:8000/url/{01f7f7b4-de0a-4779-b815-3eb9f3bfb44f}?db=mysql"
 
-Batch GET
+Not this one
 python3 get_urls.py /home/rafael/Downloads/uuid_1000.csv http://127.0.0.1:8000/url mysql result_mysql_1000.csv
+
+This one for bulk get operation
+python3 get_urls.py /home/rafael/Desktop/url_uuid_v2/uuid_list.csv http://127.0.0.1:8000/url mysql
