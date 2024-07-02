@@ -6,8 +6,6 @@ from ..service.handlers import process_csv
 post_router = APIRouter()
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename='urlUuid.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
-
 
 @post_router.post("/")
 async def upload_csv(file: UploadFile = File(...)):

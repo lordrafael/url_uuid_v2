@@ -5,8 +5,6 @@ from ..service.handlers import get_url_by_uuid_mysql, get_url_by_uuid_redis, get
 get_router = APIRouter()
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename='urlUuid.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
-
 
 @get_router.get("/{url_uuid}")
 def read_url(url_uuid: str, db: str = Query(..., description="Database to use ('mysql',redis' or 'cache')")):
@@ -22,7 +20,7 @@ def read_url(url_uuid: str, db: str = Query(..., description="Database to use ('
         
     
     if url is None:
-        logger.error("URL not found")
+        logging.error("URL not found")
         raise HTTPException(status_code=404, detail="URL naiiiiiiiiii")
     
     return {"uuid": url_uuid, "url": url}

@@ -7,8 +7,6 @@ from app.db.redis_conn import create_redis_connection
 from app.db.cache_conn import cache
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename='urlUuid.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
-
 
 @contextmanager
 def get_mysql_connection():

@@ -1,3 +1,4 @@
+import logging
 import time
 import pandas as pd
 import requests
@@ -54,9 +55,9 @@ def main(file_path, base_url, db):
     
     #print(results)
     df_results = pd.DataFrame(results)
-    resultPath = 'get_result_cache.csv'
+    resultPath = 'get_result_mysql.csv'
     df_results.to_csv(resultPath, index=False)
-
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Read UUIDs from a CSV file and fetch URLs from a FastAPI endpoint.")

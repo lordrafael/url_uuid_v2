@@ -4,8 +4,6 @@ from mysql.connector import Error
 from ..config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename='urlUuid.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
-
 
 def create_mysql_connection():
     connection = None

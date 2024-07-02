@@ -1,0 +1,6 @@
+
+http://0.0.0.0:8080/home
+
+Login with:
+	username: admin  
+	password: NtgQCvYDDkEcQm9Y

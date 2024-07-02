@@ -9,8 +9,6 @@ from app.db.cache_conn import cache
 from app.repository.store_data import insert_into_mysql,insert_into_redis,insert_into_cache
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename='urlUuid.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', encoding='utf-8')
-
 
 def get_url_by_uuid_mysql(url_uuid):
     start_time = time.time()

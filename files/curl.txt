@@ -32,3 +32,5 @@ python3 get_urls.py /home/rafael/Downloads/uuid_1000.csv http://127.0.0.1:8000/u
 
 This one for bulk get operation
 python3 get_urls.py /home/rafael/Desktop/url_uuid_v2/uuid_list.csv http://127.0.0.1:8000/url mysql
+
+
